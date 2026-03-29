@@ -39,7 +39,8 @@
       --shadow-card-hover: var(--shadow-sm), 0 20px 48px oklch(0.18 0.06 240 / 0.14);
       --font-sans: "Noto Sans SC", system-ui, sans-serif;
       --font-display: "Noto Serif SC", "Noto Sans SC", serif;
-      --font-ui: "Outfit", "Noto Sans SC", system-ui, sans-serif;
+      /* Outfit 用于英文标 / 眉题拉丁部分；中文回退 Noto Sans SC */
+    --font-ui: "Outfit", "Noto Sans SC", system-ui, sans-serif;
     }
 
     *,
@@ -90,7 +91,7 @@
     .wrap {
       position: relative;
       z-index: 1;
-      max-width: 1180px;
+      max-width: 1320px;
       margin: 0 auto;
       padding: clamp(1.25rem, 4vw, 2rem) clamp(1rem, 3vw, 1.5rem) clamp(2.5rem, 6vw, 3.5rem);
     }
@@ -310,10 +311,11 @@
       50% { filter: brightness(1.35); }
     }
 
-    /* Video — HUD 外框 */
+    /* Video — HUD 外框（放大画幅，保持 16:9 比例由 .video-frame::before 控制） */
     .video-section {
       animation: rise 0.7s ease-out 0.06s both;
-      max-width: 920px;
+      width: 100%;
+      max-width: min(100%, 1180px);
       margin: 0 auto;
     }
 
@@ -323,13 +325,13 @@
 
     .hud-chassis {
       position: relative;
-      padding: var(--space-5) var(--space-4) var(--space-5);
-      border-radius: calc(var(--radius) + 8px);
+      padding: clamp(1.35rem, 3.2vw, 2rem) clamp(1.15rem, 2.8vw, 1.75rem) clamp(1.35rem, 3.2vw, 2rem);
+      border-radius: calc(var(--radius) + 10px);
       background: linear-gradient(150deg, oklch(0.22 0.045 252), oklch(0.12 0.05 258));
       border: 1px solid oklch(0.62 0.1 195 / 0.4);
       box-shadow:
         inset 0 1px 0 oklch(1 0 0 / 0.08),
-        0 16px 48px oklch(0 0 0 / 0.38),
+        0 20px 56px oklch(0 0 0 / 0.4),
         0 0 0 1px oklch(0.45 0.08 200 / 0.25);
       transition: box-shadow 0.35s ease, border-color 0.35s ease;
     }
@@ -338,47 +340,48 @@
       border-color: oklch(0.58 0.12 195 / 0.55);
       box-shadow:
         inset 0 1px 0 oklch(1 0 0 / 0.1),
-        0 22px 56px oklch(0 0 0 / 0.42),
+        0 28px 72px oklch(0 0 0 / 0.45),
         0 0 0 1px oklch(0.5 0.1 200 / 0.3),
-        0 0 60px oklch(0.5 0.14 195 / 0.12);
+        0 0 72px oklch(0.5 0.14 195 / 0.16),
+        0 0 120px oklch(0.55 0.12 200 / 0.08);
     }
 
     .hud-chassis::before,
     .hud-chassis::after {
       content: "";
       position: absolute;
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
       border: 2px solid var(--hud-cyan);
-      opacity: 0.75;
+      opacity: 0.8;
       pointer-events: none;
     }
 
     .hud-chassis::before {
-      top: 10px;
-      left: 10px;
+      top: 12px;
+      left: 12px;
       border-right: none;
       border-bottom: none;
-      border-radius: 4px 0 0 0;
+      border-radius: 5px 0 0 0;
     }
 
     .hud-chassis::after {
-      bottom: 10px;
-      right: 10px;
+      bottom: 12px;
+      right: 12px;
       border-left: none;
       border-top: none;
-      border-radius: 0 0 4px 0;
+      border-radius: 0 0 5px 0;
     }
 
     .hud-label {
       position: absolute;
-      top: 0.65rem;
+      top: clamp(0.65rem, 1.5vw, 0.85rem);
       left: 50%;
       transform: translateX(-50%);
       font-family: var(--font-ui);
-      font-size: 0.62rem;
+      font-size: clamp(0.65rem, 1.1vw, 0.75rem);
       font-weight: 700;
-      letter-spacing: 0.32em;
+      letter-spacing: 0.28em;
       color: oklch(0.78 0.11 195);
       text-transform: uppercase;
       z-index: 3;
@@ -387,11 +390,11 @@
 
     .hud-bezel {
       position: relative;
-      border-radius: var(--radius);
+      border-radius: calc(var(--radius) + 2px);
       overflow: hidden;
       background: oklch(0.08 0.03 260);
       border: 1px solid oklch(0.55 0.1 195 / 0.45);
-      box-shadow: inset 0 0 40px oklch(0.55 0.15 195 / 0.08);
+      box-shadow: inset 0 0 48px oklch(0.55 0.15 195 / 0.1);
     }
 
     .video-frame {
@@ -895,7 +898,7 @@
       .hud-chassis:hover {
         box-shadow:
           inset 0 1px 0 oklch(1 0 0 / 0.08),
-          0 16px 48px oklch(0 0 0 / 0.38),
+          0 20px 56px oklch(0 0 0 / 0.4),
           0 0 0 1px oklch(0.45 0.08 200 / 0.25);
       }
     }
@@ -940,7 +943,8 @@
               poster="assets/face.png"
               aria-label="微课视频：地图导航与比例尺的 AI 科技之旅"
             >
-              <source src="assets/%E9%9A%90%E8%97%8F%E7%9A%84%E5%BD%A2%E7%8A%B62.mp4" type="video/mp4" />
+              <!-- 文件名含弯引号："比例尺"的AI科技之旅.mp4 -->
+              <source src="assets/%E2%80%9C%E6%AF%94%E4%BE%8B%E5%B0%BA%E2%80%9D%E7%9A%84AI%E7%A7%91%E6%8A%80%E4%B9%8B%E6%97%85.mp4" type="video/mp4" />
               <source src="https://www.w3.org/2010/05/video/media/30s_segment_2-mbps_hd-cabf01a6.mp4" type="video/mp4" />
               <p>您的浏览器不支持 HTML5 视频。请使用现代浏览器打开本页。</p>
             </video>
@@ -1163,7 +1167,7 @@
       var hint = document.getElementById("video-source-hint");
       if (video && hint) {
         video.addEventListener("loadeddata", function () {
-          hint.textContent = "当前片源：assets/隐藏的形状2.mp4（可替换为本主题成片）";
+          hint.textContent = "当前片源：assets/「比例尺」的AI科技之旅.mp4";
         });
         video.addEventListener("error", function () {
           hint.textContent = "若主视频无法播放，请将成片放入 assets 目录并更新 video 的 source，或检查浏览器是否允许本地/跨源媒体。";
