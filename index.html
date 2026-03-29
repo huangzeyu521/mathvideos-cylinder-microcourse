@@ -3,25 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="圆柱圆锥的科技应用——从建筑塔吊到生活水杯 | 数学微课" />
-  <title>圆柱圆锥的科技应用 | 数学微课</title>
+  <meta name="description" content="地图导航如何预知未来？比例尺与导航 ETA 的 AI 科技之旅 | 数学微课" />
+  <title>地图导航如何预知未来？——比例尺的 AI 科技之旅 | 数学微课</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <style>
     :root {
-      --bg-deep: oklch(0.18 0.04 250);
-      --bg-mid: oklch(0.28 0.06 245);
-      --surface: oklch(0.98 0.01 95);
-      --surface-2: oklch(1 0.005 95);
-      --text: oklch(0.22 0.02 260);
-      --text-muted: oklch(0.45 0.03 260);
-      --accent: oklch(0.72 0.16 55);
-      --accent-2: oklch(0.62 0.14 200);
-      --ring: oklch(0.75 0.08 200 / 0.35);
+      --bg-deep: oklch(0.14 0.05 240);
+      --bg-mid: oklch(0.22 0.06 235);
+      --surface: oklch(0.98 0.01 240);
+      --surface-2: oklch(1 0.005 240);
+      --text: oklch(0.22 0.02 250);
+      --text-muted: oklch(0.45 0.03 250);
+      --accent: oklch(0.72 0.18 195);
+      --accent-2: oklch(0.65 0.2 150);
+      --hud-cyan: oklch(0.78 0.14 195);
+      --ring: oklch(0.72 0.12 195 / 0.4);
       --radius: 1rem;
-      --shadow: 0 4px 24px oklch(0.2 0.05 260 / 0.12);
+      --shadow: 0 4px 24px oklch(0.2 0.05 250 / 0.14);
       --font-sans: "Noto Sans SC", system-ui, sans-serif;
       --font-display: "Noto Serif SC", "Noto Sans SC", serif;
     }
@@ -53,16 +54,16 @@
       min-height: 100vh;
       font-family: var(--font-sans);
       color: var(--text);
-      background: radial-gradient(1200px 600px at 10% -10%, oklch(0.45 0.12 250 / 0.35), transparent),
-        radial-gradient(900px 500px at 100% 20%, oklch(0.55 0.14 55 / 0.2), transparent),
-        linear-gradient(165deg, var(--bg-deep) 0%, var(--bg-mid) 45%, oklch(0.22 0.05 255) 100%);
+      background: radial-gradient(1000px 520px at 8% -8%, oklch(0.4 0.14 240 / 0.4), transparent),
+        radial-gradient(800px 480px at 100% 15%, oklch(0.45 0.12 195 / 0.25), transparent),
+        linear-gradient(168deg, var(--bg-deep) 0%, var(--bg-mid) 50%, oklch(0.18 0.05 245) 100%);
     }
 
     .noise {
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.04;
+      opacity: 0.035;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       z-index: 0;
     }
@@ -70,114 +71,229 @@
     .wrap {
       position: relative;
       z-index: 1;
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
       padding: 1.5rem 1.25rem 3rem;
     }
 
-    /* Header */
+    /* Header — 科技网格 + 地图底纹 */
     .header {
       text-align: center;
-      padding: 2.25rem 1.5rem 2rem;
+      padding: 2.5rem 1.5rem 2.25rem;
       margin-bottom: 1.75rem;
       border-radius: calc(var(--radius) + 4px);
-      background: linear-gradient(135deg, oklch(0.35 0.08 250 / 0.55), oklch(0.28 0.06 260 / 0.4));
-      border: 1px solid oklch(1 0 0 / 0.12);
-      box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
+      border: 1px solid oklch(1 0 0 / 0.14);
+      box-shadow: var(--shadow), 0 0 60px oklch(0.55 0.15 195 / 0.12);
       animation: rise 0.7s ease-out both;
     }
 
-    .header::before {
-      content: "";
+    .header-bg {
       position: absolute;
-      width: 200px;
-      height: 200px;
-      right: -40px;
-      top: -60px;
-      border-radius: 50%;
-      background: conic-gradient(from 200deg, var(--accent), transparent 60%);
-      opacity: 0.35;
+      inset: 0;
+      background:
+        linear-gradient(90deg, oklch(0.55 0.12 195 / 0.08) 1px, transparent 1px),
+        linear-gradient(0deg, oklch(0.55 0.12 195 / 0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.85;
     }
 
-    .header::after {
+    .header-bg::before {
       content: "";
       position: absolute;
-      width: 120px;
-      height: 160px;
-      left: 8%;
-      bottom: -80px;
-      background: linear-gradient(180deg, oklch(0.7 0.12 200 / 0.25), transparent);
-      border-radius: 50% 50% 0 0 / 40% 40% 0 0;
-      transform: rotate(-8deg);
+      inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 100%, oklch(0.5 0.14 200 / 0.25), transparent 55%);
+      pointer-events: none;
+    }
+
+    .header-scan {
+      position: absolute;
+      inset: -50% -20%;
+      background: linear-gradient(
+        105deg,
+        transparent 40%,
+        oklch(0.75 0.12 195 / 0.06) 48%,
+        oklch(0.85 0.1 200 / 0.12) 50%,
+        oklch(0.75 0.12 195 / 0.06) 52%,
+        transparent 60%
+      );
+      animation: scan-sweep 7s ease-in-out infinite;
+    }
+
+    .header-code {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.65rem;
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: oklch(0.75 0.12 195 / 0.45);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 1rem;
+      animation: code-flicker 3.2s ease-in-out infinite;
+    }
+
+    .header-scale {
+      position: absolute;
+      left: 50%;
+      top: 0.85rem;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 14px;
+      opacity: 0.9;
+      animation: scale-tick 2.4s ease-in-out infinite;
+    }
+
+    .header-scale span {
+      width: 3px;
+      background: linear-gradient(180deg, var(--hud-cyan), oklch(0.55 0.1 200 / 0.5));
+      border-radius: 1px;
+    }
+
+    .header-scale span:nth-child(1) { height: 40%; }
+    .header-scale span:nth-child(2) { height: 70%; }
+    .header-scale span:nth-child(3) { height: 100%; }
+    .header-scale span:nth-child(4) { height: 55%; }
+    .header-scale span:nth-child(5) { height: 85%; }
+    .header-scale span:nth-child(6) { height: 100%; }
+    .header-scale span:nth-child(7) { height: 60%; }
+    .header-scale span:nth-child(8) { height: 90%; }
+
+    .header-inner {
+      position: relative;
+      z-index: 2;
     }
 
     .header h1 {
       margin: 0 0 0.75rem;
       font-family: var(--font-display);
-      font-size: clamp(1.35rem, 4vw, 2.05rem);
+      font-size: clamp(1.2rem, 3.8vw, 2rem);
       font-weight: 700;
-      line-height: 1.35;
+      line-height: 1.4;
       color: oklch(0.99 0.01 95);
-      letter-spacing: 0.02em;
-      text-shadow: 0 2px 20px oklch(0 0 0 / 0.35);
-      position: relative;
+      letter-spacing: 0.03em;
+      text-shadow: 0 2px 24px oklch(0 0 0 / 0.4), 0 0 40px oklch(0.65 0.15 195 / 0.35);
     }
 
     .header .sub {
       margin: 0;
-      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      font-size: clamp(0.9rem, 2vw, 1.05rem);
       font-weight: 500;
-      color: oklch(0.92 0.02 95 / 0.92);
-      position: relative;
+      color: oklch(0.9 0.03 95 / 0.95);
     }
 
     .badge-row {
-      margin-top: 1.25rem;
+      margin-top: 1.2rem;
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       justify-content: center;
-      position: relative;
     }
 
     .badge {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       padding: 0.35rem 0.75rem;
       border-radius: 999px;
-      background: oklch(1 0 0 / 0.12);
+      background: oklch(1 0 0 / 0.1);
       color: oklch(0.95 0.02 95);
-      border: 1px solid oklch(1 0 0 / 0.2);
+      border: 1px solid oklch(1 0 0 / 0.18);
     }
 
-    /* Layout */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      align-items: start;
+    @keyframes scan-sweep {
+      0%, 100% { transform: translateX(-8%) rotate(0deg); opacity: 0.5; }
+      50% { transform: translateX(8%) rotate(0deg); opacity: 0.85; }
     }
 
-    @media (min-width: 960px) {
-      .main-grid {
-        grid-template-columns: minmax(0, 1fr) 320px;
-        gap: 1.75rem;
-      }
+    @keyframes code-flicker {
+      0%, 100% { opacity: 0.35; }
+      40% { opacity: 0.75; }
+      55% { opacity: 0.45; }
     }
 
+    @keyframes scale-tick {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.35); }
+    }
+
+    /* Video — HUD 外框 */
     .video-section {
       animation: rise 0.75s ease-out 0.08s both;
+      max-width: 920px;
+      margin: 0 auto 2rem;
+    }
+
+    .hud-chassis {
+      position: relative;
+      padding: 1rem 1rem 1.15rem;
+      border-radius: calc(var(--radius) + 6px);
+      background: linear-gradient(145deg, oklch(0.2 0.04 250), oklch(0.14 0.05 255));
+      border: 1px solid oklch(0.65 0.1 195 / 0.35);
+      box-shadow:
+        inset 0 1px 0 oklch(1 0 0 / 0.06),
+        0 12px 40px oklch(0 0 0 / 0.35),
+        0 0 0 1px oklch(0.5 0.08 200 / 0.2);
+    }
+
+    .hud-chassis::before,
+    .hud-chassis::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--hud-cyan);
+      opacity: 0.75;
+      pointer-events: none;
+    }
+
+    .hud-chassis::before {
+      top: 10px;
+      left: 10px;
+      border-right: none;
+      border-bottom: none;
+      border-radius: 4px 0 0 0;
+    }
+
+    .hud-chassis::after {
+      bottom: 10px;
+      right: 10px;
+      border-left: none;
+      border-top: none;
+      border-radius: 0 0 4px 0;
+    }
+
+    .hud-label {
+      position: absolute;
+      top: 0.55rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      color: oklch(0.75 0.1 195);
+      text-transform: uppercase;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .hud-bezel {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: oklch(0.08 0.03 260);
+      border: 1px solid oklch(0.55 0.1 195 / 0.45);
+      box-shadow: inset 0 0 40px oklch(0.55 0.15 195 / 0.08);
     }
 
     .video-frame {
       position: relative;
-      border-radius: var(--radius);
       overflow: hidden;
-      background: oklch(0.12 0.03 260);
-      border: 1px solid oklch(1 0 0 / 0.14);
-      box-shadow: var(--shadow), 0 0 0 1px var(--ring);
     }
 
     .video-frame::before {
@@ -192,112 +308,275 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      background: #0a0e18;
+      background: #050a12;
     }
 
-    .video-label {
-      margin-top: 0.65rem;
+    .video-disclaimer {
+      margin-top: 0.75rem;
       text-align: center;
-      font-size: 0.78rem;
+      font-size: 0.72rem;
+      line-height: 1.55;
+      color: oklch(0.82 0.04 95 / 0.95);
+      max-width: 36rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .video-disclaimer .placeholder {
+      display: inline-block;
+      padding: 0 0.15em;
+      border-bottom: 1px dashed oklch(0.75 0.08 95 / 0.6);
+      color: oklch(0.92 0.05 95);
       font-weight: 600;
-      letter-spacing: 0.06em;
-      color: oklch(0.88 0.03 95);
-      opacity: 0.95;
     }
 
     .video-hint {
-      margin-top: 0.35rem;
+      margin-top: 0.4rem;
       text-align: center;
-      font-size: 0.72rem;
-      color: oklch(0.75 0.04 95 / 0.85);
+      font-size: 0.7rem;
+      color: oklch(0.68 0.04 95 / 0.8);
     }
 
-    /* Course card */
-    .course-card {
+    /* Knowledge cards */
+    .knowledge-section {
+      margin-bottom: 2rem;
+    }
+
+    .knowledge-section h2 {
+      margin: 0 0 1.1rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: oklch(0.95 0.03 95);
+      text-align: center;
+      text-shadow: 0 1px 12px oklch(0 0 0 / 0.25);
+    }
+
+    .knowledge-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.1rem;
+    }
+
+    @media (min-width: 720px) {
+      .knowledge-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .knowledge-grid .k-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        max-width: 560px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .knowledge-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .knowledge-grid .k-card:last-child:nth-child(odd) {
+        grid-column: auto;
+        max-width: none;
+      }
+    }
+
+    .k-card {
       background: var(--surface);
       color: var(--text);
       border-radius: var(--radius);
-      padding: 1.35rem 1.25rem;
-      border: 1px solid oklch(0.9 0.01 260);
+      padding: 1.2rem 1.15rem 1.25rem;
+      border: 1px solid oklch(0.9 0.015 250);
       box-shadow: var(--shadow);
-      animation: rise 0.8s ease-out 0.12s both;
+      animation: rise 0.8s ease-out both;
     }
 
-    .course-card h2 {
-      margin: 0 0 1rem;
-      font-size: 1.05rem;
+    .k-card:nth-child(1) { animation-delay: 0.1s; }
+    .k-card:nth-child(2) { animation-delay: 0.14s; }
+    .k-card:nth-child(3) { animation-delay: 0.18s; }
+
+    .k-card h3 {
+      margin: 0 0 0.75rem;
+      font-size: 1rem;
       font-weight: 700;
-      color: oklch(0.25 0.04 260);
+      color: oklch(0.26 0.05 250);
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 0.5rem;
+      line-height: 1.35;
     }
 
-    .course-card h2 span.icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, var(--accent-2), oklch(0.5 0.1 260));
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .k-card h3 .tag {
+      flex-shrink: 0;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      background: linear-gradient(135deg, oklch(0.55 0.14 250), oklch(0.48 0.12 260));
       color: white;
-      font-size: 0.85rem;
     }
 
-    .course-card dl {
+    .k-card p {
       margin: 0;
-      font-size: 0.9rem;
-      line-height: 1.65;
-    }
-
-    .course-card dt {
-      font-weight: 700;
-      color: oklch(0.32 0.05 260);
-      margin-top: 0.85rem;
-    }
-
-    .course-card dt:first-of-type {
-      margin-top: 0;
-    }
-
-    .course-card dd {
-      margin: 0.35rem 0 0;
+      font-size: 0.88rem;
+      line-height: 1.7;
       color: var(--text-muted);
     }
 
-    .math-block {
-      margin-top: 0.5rem;
-      padding: 0.65rem 0.75rem;
+    .k-card .math-block {
+      margin-top: 0.65rem;
+      padding: 0.6rem 0.7rem;
       border-radius: 0.5rem;
-      background: oklch(0.97 0.015 260);
-      border: 1px solid oklch(0.9 0.02 260);
+      background: oklch(0.97 0.015 250);
+      border: 1px solid oklch(0.9 0.02 250);
       overflow-x: auto;
+    }
+
+    .k-visual {
+      margin-top: 0.85rem;
+      border-radius: 0.65rem;
+      background: oklch(0.96 0.02 250);
+      border: 1px solid oklch(0.9 0.02 250);
+      padding: 0.75rem;
+    }
+
+    /* 手机地图线段比例尺示意 */
+    .scale-phone {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .scale-phone .phone {
+      width: 72px;
+      height: 118px;
+      border-radius: 10px;
+      background: linear-gradient(160deg, oklch(0.35 0.05 250), oklch(0.2 0.04 260));
+      border: 2px solid oklch(0.45 0.06 250);
+      box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scale-phone .phone::after {
+      content: "";
+      position: absolute;
+      inset: 18% 8% 22%;
+      border-radius: 4px;
+      background: linear-gradient(180deg, oklch(0.55 0.08 200 / 0.3), oklch(0.4 0.06 220 / 0.4));
+    }
+
+    .scale-bar {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      gap: 0;
+      height: 22px;
+      padding: 0 4px;
+      border-top: 2px solid oklch(0.35 0.05 250);
+    }
+
+    .scale-bar .tick {
+      flex: 1;
+      height: 8px;
+      border-left: 1px solid oklch(0.4 0.05 250);
+    }
+
+    .scale-bar .tick:first-child { border-left: none; }
+    .scale-bar .bar {
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: 0;
+      height: 4px;
+      background: linear-gradient(90deg, oklch(0.55 0.14 250), var(--accent));
+      border-radius: 2px;
+    }
+
+    .scale-wrap {
+      position: relative;
+      min-width: 140px;
+    }
+
+    .scale-wrap .label {
+      font-size: 0.65rem;
+      color: oklch(0.45 0.03 250);
+      margin-top: 0.35rem;
+      text-align: center;
+    }
+
+    /* 红绿路况示意 */
+    .traffic-legend {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .traffic-legend .line {
+      height: 6px;
+      width: 64px;
+      border-radius: 999px;
+    }
+
+    .traffic-legend .line.red {
+      background: linear-gradient(90deg, oklch(0.55 0.2 25), oklch(0.62 0.22 35));
+      box-shadow: 0 0 12px oklch(0.55 0.2 30 / 0.5);
+    }
+
+    .traffic-legend .line.green {
+      background: linear-gradient(90deg, oklch(0.55 0.18 145), oklch(0.62 0.16 155));
+      box-shadow: 0 0 12px oklch(0.55 0.18 150 / 0.45);
+    }
+
+    /* 反比例天平 */
+    .balance-demo {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      padding: 0.5rem 0;
+    }
+
+    .balance-svg {
+      width: 160px;
+      height: 100px;
+    }
+
+    .balance-note {
+      font-size: 0.78rem;
+      color: oklch(0.42 0.04 250);
+      max-width: 200px;
+      line-height: 1.55;
     }
 
     /* Interactive */
     .interactive {
-      margin-top: 2rem;
+      margin-top: 0.5rem;
       padding: 1.5rem 1.35rem;
       border-radius: var(--radius);
       background: var(--surface-2);
-      border: 1px solid oklch(0.9 0.015 260);
+      border: 1px solid oklch(0.9 0.015 250);
       box-shadow: var(--shadow);
-      animation: rise 0.85s ease-out 0.16s both;
+      animation: rise 0.85s ease-out 0.2s both;
     }
 
     .interactive h2 {
       margin: 0 0 0.75rem;
       font-size: 1.1rem;
       font-weight: 700;
-      color: oklch(0.28 0.04 260);
+      color: oklch(0.28 0.04 250);
     }
 
     .interactive .prompt {
       font-size: 0.95rem;
       color: var(--text-muted);
       margin-bottom: 1rem;
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
     .interactive label {
@@ -305,17 +584,17 @@
       font-size: 0.82rem;
       font-weight: 600;
       margin-bottom: 0.45rem;
-      color: oklch(0.38 0.04 260);
+      color: oklch(0.38 0.04 250);
     }
 
     .interactive textarea {
       width: 100%;
-      min-height: 110px;
+      min-height: 120px;
       padding: 0.75rem 0.85rem;
       font-family: var(--font-sans);
       font-size: 0.95rem;
       border-radius: 0.65rem;
-      border: 1px solid oklch(0.88 0.02 260);
+      border: 1px solid oklch(0.88 0.02 250);
       background: oklch(1 0 0);
       resize: vertical;
       transition: border-color 0.2s, box-shadow 0.2s;
@@ -323,7 +602,7 @@
 
     .interactive textarea:focus {
       outline: none;
-      border-color: var(--accent-2);
+      border-color: var(--accent);
       box-shadow: 0 0 0 3px oklch(0.62 0.14 200 / 0.2);
     }
 
@@ -344,15 +623,15 @@
       font-size: 0.9rem;
       padding: 0.6rem 1.25rem;
       border-radius: 999px;
-      background: linear-gradient(135deg, oklch(0.52 0.12 250), oklch(0.45 0.1 260));
+      background: linear-gradient(135deg, oklch(0.48 0.12 250), oklch(0.42 0.11 260));
       color: white;
-      box-shadow: 0 4px 14px oklch(0.35 0.1 260 / 0.35);
+      box-shadow: 0 4px 14px oklch(0.35 0.1 250 / 0.35);
       transition: transform 0.15s ease, box-shadow 0.2s;
     }
 
     .btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 6px 18px oklch(0.35 0.1 260 / 0.45);
+      box-shadow: 0 6px 18px oklch(0.35 0.1 250 / 0.45);
     }
 
     .btn:active {
@@ -360,28 +639,28 @@
     }
 
     .btn-ghost {
-      background: oklch(0.96 0.01 260);
+      background: oklch(0.96 0.01 250);
       color: var(--text);
-      border: 1px solid oklch(0.88 0.02 260);
+      border: 1px solid oklch(0.88 0.02 250);
       box-shadow: none;
     }
 
     .saved-note {
       font-size: 0.8rem;
-      color: oklch(0.5 0.03 260);
+      color: oklch(0.5 0.03 250);
     }
 
     .thoughts-list {
       margin-top: 1.25rem;
       padding-top: 1.1rem;
-      border-top: 1px dashed oklch(0.88 0.02 260);
+      border-top: 1px dashed oklch(0.88 0.02 250);
     }
 
     .thoughts-list h3 {
       margin: 0 0 0.65rem;
       font-size: 0.88rem;
       font-weight: 700;
-      color: oklch(0.4 0.04 260);
+      color: oklch(0.4 0.04 250);
     }
 
     .thought-item {
@@ -390,15 +669,15 @@
       padding: 0.65rem 0.75rem;
       margin-bottom: 0.5rem;
       border-radius: 0.5rem;
-      background: oklch(0.97 0.01 260);
-      border: 1px solid oklch(0.92 0.015 260);
+      background: oklch(0.97 0.01 250);
+      border: 1px solid oklch(0.92 0.015 250);
       color: var(--text-muted);
     }
 
     .thought-item time {
       display: block;
       font-size: 0.72rem;
-      color: oklch(0.55 0.03 260);
+      color: oklch(0.55 0.03 250);
       margin-bottom: 0.35rem;
     }
 
@@ -422,8 +701,11 @@
 
     @media (prefers-reduced-motion: reduce) {
       .header,
+      .header-scan,
+      .header-code,
+      .header-scale,
       .video-section,
-      .course-card,
+      .k-card,
       .interactive {
         animation: none;
       }
@@ -437,68 +719,138 @@
   <div class="noise" aria-hidden="true"></div>
   <div class="wrap">
     <header class="header" role="banner">
-      <h1>《圆柱圆锥的科技应用——从建筑塔吊到生活水杯》</h1>
-      <p class="sub">探索隐藏在宏大建筑与日常物件中的数学密码</p>
-      <div class="badge-row">
-        <span class="badge">科学普及 · 数学拓展</span>
-        <span class="badge">圆柱 · 圆锥 · 体积与容积</span>
+      <div class="header-bg" aria-hidden="true"></div>
+      <div class="header-scan" aria-hidden="true"></div>
+      <div class="header-scale" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="header-code" aria-hidden="true">0x4E2A · NAV_MESH · scale=1:50000 · ETA_MODEL=gcn+v2x · latlng_encrypt · route_id=7f3a…</div>
+      <div class="header-inner">
+        <h1>《地图导航如何预知未来？——“比例尺”的 AI 科技之旅》</h1>
+        <p class="sub">从比例尺到 ETA：看见地图背后的数学与智能</p>
+        <div class="badge-row">
+          <span class="badge">科学普及 · 数学拓展</span>
+          <span class="badge">比例尺 · 导航 ETA · 反比例</span>
+        </div>
       </div>
     </header>
 
-    <div class="main-grid">
-      <section class="video-section" aria-labelledby="video-heading">
-        <h2 id="video-heading" class="visually-hidden">微课视频</h2>
-        <div class="video-frame">
-          <!-- 在线部署：成片托管于 GitHub Releases（microcourse.mp4） -->
-          <video
-            id="lesson-video"
-            controls
-            playsinline
-            preload="metadata"
-            poster="assets/face.png"
-            aria-label="微课视频：圆柱圆锥的科技应用"
-          >
-            <source
-              src="https://github.com/huangzeyu521/mathvideos-cylinder-microcourse/releases/download/v1.0.0/microcourse.mp4"
-              type="video/mp4"
-            />
-            <!-- 备用演示源（主源未就绪时） -->
-            <source src="https://www.w3.org/2010/05/video/media/30s_segment_2-mbps_hd-cabf01a6.mp4" type="video/mp4" />
-            <p>您的浏览器不支持 HTML5 视频。请使用现代浏览器打开本页。</p>
-          </video>
+    <section class="video-section" aria-labelledby="video-heading">
+      <h2 id="video-heading" class="visually-hidden">微课视频</h2>
+      <div class="hud-chassis">
+        <span class="hud-label" aria-hidden="true">NAV · HUD</span>
+        <div class="hud-bezel">
+          <div class="video-frame">
+            <video
+              id="lesson-video"
+              controls
+              playsinline
+              preload="metadata"
+              poster="assets/face.png"
+              aria-label="微课视频：地图导航与比例尺的 AI 科技之旅"
+            >
+              <source src="assets/%E9%9A%90%E8%97%8F%E7%9A%84%E5%BD%A2%E7%8A%B62.mp4" type="video/mp4" />
+              <source src="https://www.w3.org/2010/05/video/media/30s_segment_2-mbps_hd-cabf01a6.mp4" type="video/mp4" />
+              <p>您的浏览器不支持 HTML5 视频。请使用现代浏览器打开本页。</p>
+            </video>
+          </div>
         </div>
-        <p class="video-label">本视频部分画面由AI生成</p>
-        <p class="video-hint" id="video-source-hint">正在加载视频源…</p>
-      </section>
+      </div>
+      <p class="video-disclaimer">
+        本微课部分画面/动画由 <span class="placeholder" title="请替换为实际使用的 AI 工具名称">[填入AI工具名称]</span> AI 生成
+      </p>
+      <p class="video-hint" id="video-source-hint">正在加载视频源…</p>
+    </section>
 
-      <aside class="course-card" aria-labelledby="course-title">
-        <h2 id="course-title"><span class="icon" aria-hidden="true">课</span>课程信息</h2>
-        <dl>
-          <dt>核心知识点</dt>
-          <dd>
-            圆柱与圆锥的几何特征；圆柱的体积（容积）与底面积、高的关系。
-            <div class="math-block" aria-label="圆柱体积公式">
-              <span id="formula-v"></span>
+    <section class="knowledge-section" aria-labelledby="knowledge-heading">
+      <h2 id="knowledge-heading">知识解密</h2>
+      <div class="knowledge-grid">
+        <article class="k-card">
+          <h3><span class="tag">A</span>地图的数学密码（比例尺）</h3>
+          <p>
+            比例尺把「真实世界」折叠进屏幕：知道图上的一段长度，就能换算实际有多远。核心关系如下。
+          </p>
+          <div class="math-block" aria-label="比例尺公式">
+            <span id="formula-scale"></span>
+          </div>
+          <div class="k-visual">
+            <div class="scale-phone">
+              <div class="phone" aria-hidden="true"></div>
+              <div class="scale-wrap">
+                <div style="position:relative;padding-top:8px">
+                  <div class="scale-bar" aria-hidden="true">
+                    <span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span>
+                    <span class="bar"></span>
+                  </div>
+                </div>
+                <p class="label">手机地图「线段比例尺」示意</p>
+              </div>
             </div>
-          </dd>
-          <dt>应用场景</dt>
-          <dd>课外拓展：联系工程结构与日常生活容器，理解数学建模。</dd>
-          <dt>内容简介</dt>
-          <dd>
-            动画演示塔吊中圆锥形态对受力与稳定性的作用，并分步推演保温杯的底面半径、高度与容积测算，将
-            <strong>抽象公式</strong>与<strong>装水刻度</strong>对应起来，突出微课联系生活、具有启发性。
-          </dd>
-        </dl>
-      </aside>
-    </div>
+          </div>
+        </article>
+
+        <article class="k-card">
+          <h3><span class="tag">B</span>导航的 AI 超级大脑（ETA 预估）</h3>
+          <p>
+            高德、谷歌地图等导航会融合路网、实时车速与历史规律：用图神经网络（GNN）等方法理解道路之间的关联，再结合实时数据判断拥堵（红线）与畅通（绿线），从而估计每段路程的行驶速度。
+          </p>
+          <p style="margin-top:0.65rem">
+            把路程与速度联系起来，就能用下面的关系估算<strong>ETA（预估到达时间）</strong>。
+          </p>
+          <div class="math-block" aria-label="时间与路程速度">
+            <span id="formula-eta"></span>
+          </div>
+          <div class="k-visual">
+            <div class="traffic-legend" aria-hidden="true">
+              <span class="line red" title="拥堵"></span>
+              <span style="font-size:0.72rem;color:oklch(0.45 0.05 30)">拥堵 · 车速低</span>
+              <span class="line green" title="畅通"></span>
+              <span style="font-size:0.72rem;color:oklch(0.42 0.05 160)">畅通 · 车速高</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="k-card">
+          <h3><span class="tag">C</span>隐藏的数学考点（反比例）</h3>
+          <p>
+            当<strong>路程一定</strong>时，开得越快，所用时间越短；开得越慢，时间越长——速度与时间此消彼长，符合反比例关系。
+          </p>
+          <div class="math-block" aria-label="反比例关系">
+            <span id="formula-inverse"></span>
+          </div>
+          <div class="k-visual">
+            <div class="balance-demo">
+              <svg class="balance-svg" viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                  <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="oklch(0.55 0.08 250)" />
+                    <stop offset="100%" stop-color="oklch(0.45 0.08 260)" />
+                  </linearGradient>
+                </defs>
+                <line x1="80" y1="12" x2="80" y2="38" stroke="oklch(0.45 0.05 250)" stroke-width="2" />
+                <line x1="20" y1="38" x2="140" y2="38" stroke="url(#beam)" stroke-width="3" stroke-linecap="round" />
+                <line x1="20" y1="38" x2="20" y2="52" stroke="oklch(0.5 0.06 250)" stroke-width="2" />
+                <line x1="140" y1="38" x2="140" y2="52" stroke="oklch(0.5 0.06 250)" stroke-width="2" />
+                <rect x="8" y="52" width="24" height="18" rx="3" fill="oklch(0.65 0.14 250)" opacity="0.85" />
+                <rect x="128" y="52" width="24" height="18" rx="3" fill="oklch(0.55 0.14 160)" opacity="0.85" />
+                <text x="20" y="64" font-size="8" fill="white" text-anchor="middle" font-family="system-ui,sans-serif">v</text>
+                <text x="140" y="64" font-size="8" fill="white" text-anchor="middle" font-family="system-ui,sans-serif">t</text>
+                <text x="80" y="92" font-size="9" fill="oklch(0.42 0.04 250)" text-anchor="middle" font-family="Noto Sans SC,sans-serif">路程 s 一定</text>
+              </svg>
+              <p class="balance-note">天平两侧可理解为：速度增大则时间减小，乘积 v×t 保持不变（等于定长路程）。</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
 
     <section class="interactive" aria-labelledby="interactive-title">
-      <h2 id="interactive-title">拓展思考</h2>
+      <h2 id="interactive-title">在线挑战</h2>
       <p class="prompt">
-        你还在生活中见过哪些巧妙利用圆柱、圆锥结构的设计？欢迎写下你的观察与猜想（内容仅保存在本机浏览器中）。
+        如果你是 AI，面对「距离近但拥堵的红线」和「距离远但畅通的绿线」，你会推荐哪一条路？请简要说明你的理由（内容仅保存在本机浏览器中，便于课后回顾）。
       </p>
-      <label for="thought-input">你的思考</label>
-      <textarea id="thought-input" placeholder="例如：交通锥、粮仓、火箭整流罩、纸杯叠放……" maxlength="2000"></textarea>
+      <label for="thought-input">你的选择与思考</label>
+      <textarea id="thought-input" placeholder="例如：我会优先比较 ETA，并考虑转向延迟与事故风险……" maxlength="2000"></textarea>
       <div class="btn-row">
         <button type="button" class="btn" id="save-thought">保存到本页记录</button>
         <button type="button" class="btn btn-ghost" id="clear-thought">清空输入</button>
@@ -510,20 +862,39 @@
       </div>
     </section>
 
-    <p class="footer-note">本页面为大赛作品展示页 · 数学微课《圆柱圆锥的科技应用》</p>
+    <p class="footer-note">本页面为大赛作品展示页 · 数学微课《地图导航如何预知未来？——“比例尺”的 AI 科技之旅》</p>
   </div>
 
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      var formulaEl = document.getElementById("formula-v");
-      if (typeof katex !== "undefined" && formulaEl) {
-        katex.render("V=\\pi r^{2} h", formulaEl, { displayMode: true, throwOnError: false });
-      } else if (formulaEl) {
-        formulaEl.textContent = "V = π r² h";
+      function renderFormula(id, tex, plain) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (typeof katex !== "undefined") {
+          katex.render(tex, el, { displayMode: true, throwOnError: false });
+        } else {
+          el.textContent = plain;
+        }
       }
 
-      var STORAGE_KEY = "mathvideos_cylinder_thoughts_v1";
+      renderFormula(
+        "formula-scale",
+        "\\text{实际距离} = \\frac{\\text{图上距离}}{\\text{比例尺}}",
+        "实际距离 = 图上距离 ÷ 比例尺"
+      );
+      renderFormula(
+        "formula-eta",
+        "\\text{时间} = \\frac{\\text{路程}}{\\text{速度}} \\quad (\\text{用于估算 ETA})",
+        "时间 = 路程 ÷ 速度（用于估算 ETA）"
+      );
+      renderFormula(
+        "formula-inverse",
+        "s \\text{ 一定时}, \\quad v \\times t = s \\quad (v \\text{ 与 } t \\text{ 成反比例})",
+        "s 一定时，v × t = s（v 与 t 成反比例）"
+      );
+
+      var STORAGE_KEY = "mathvideos_mapnav_challenge_v1";
       var input = document.getElementById("thought-input");
       var saveBtn = document.getElementById("save-thought");
       var clearBtn = document.getElementById("clear-thought");
@@ -592,11 +963,10 @@
       var hint = document.getElementById("video-source-hint");
       if (video && hint) {
         video.addEventListener("loadeddata", function () {
-          hint.textContent = "当前片源：GitHub Releases · microcourse.mp4";
+          hint.textContent = "当前片源：assets/隐藏的形状2.mp4（可替换为本主题成片）";
         });
         video.addEventListener("error", function () {
-          hint.textContent =
-            "若无法播放，请确认已发布 Release v1.0.0 且含 microcourse.mp4；或检查网络与浏览器跨域策略。";
+          hint.textContent = "若主视频无法播放，请将成片放入 assets 目录并更新 video 的 source，或检查浏览器是否允许本地/跨源媒体。";
         });
       }
     });
