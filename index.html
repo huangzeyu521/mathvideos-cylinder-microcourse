@@ -7,24 +7,39 @@
   <title>地图导航如何预知未来？——比例尺的 AI 科技之旅 | 数学微课</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
   <style>
     :root {
-      --bg-deep: oklch(0.14 0.05 240);
-      --bg-mid: oklch(0.22 0.06 235);
-      --surface: oklch(0.98 0.01 240);
-      --surface-2: oklch(1 0.005 240);
-      --text: oklch(0.22 0.02 250);
-      --text-muted: oklch(0.45 0.03 250);
-      --accent: oklch(0.72 0.18 195);
-      --accent-2: oklch(0.65 0.2 150);
-      --hud-cyan: oklch(0.78 0.14 195);
-      --ring: oklch(0.72 0.12 195 / 0.4);
+      --bg-deep: oklch(0.13 0.045 242);
+      --bg-mid: oklch(0.2 0.055 236);
+      --surface: oklch(0.985 0.008 240);
+      --surface-2: oklch(1 0.004 240);
+      --surface-elevated: oklch(0.995 0.006 245);
+      --text: oklch(0.22 0.025 252);
+      --text-muted: oklch(0.44 0.028 250);
+      --accent: oklch(0.7 0.17 195);
+      --accent-2: oklch(0.62 0.18 165);
+      --hud-cyan: oklch(0.76 0.13 195);
+      --ring: oklch(0.65 0.12 195 / 0.45);
       --radius: 1rem;
-      --shadow: 0 4px 24px oklch(0.2 0.05 250 / 0.14);
+      --radius-lg: 1.25rem;
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.5rem;
+      --space-6: 2rem;
+      --space-8: 2.5rem;
+      --shadow-sm: 0 1px 2px oklch(0.15 0.04 260 / 0.06);
+      --shadow: 0 4px 24px oklch(0.18 0.05 250 / 0.12);
+      --shadow-md: 0 8px 32px oklch(0.15 0.04 260 / 0.14);
+      --shadow-lg: 0 20px 50px oklch(0.12 0.05 260 / 0.18);
+      --shadow-card: var(--shadow-sm), 0 12px 40px oklch(0.2 0.04 250 / 0.08);
+      --shadow-card-hover: var(--shadow-sm), 0 20px 48px oklch(0.18 0.06 240 / 0.14);
       --font-sans: "Noto Sans SC", system-ui, sans-serif;
       --font-display: "Noto Serif SC", "Noto Sans SC", serif;
+      --font-ui: "Outfit", "Noto Sans SC", system-ui, sans-serif;
     }
 
     *,
@@ -54,9 +69,13 @@
       min-height: 100vh;
       font-family: var(--font-sans);
       color: var(--text);
-      background: radial-gradient(1000px 520px at 8% -8%, oklch(0.4 0.14 240 / 0.4), transparent),
-        radial-gradient(800px 480px at 100% 15%, oklch(0.45 0.12 195 / 0.25), transparent),
-        linear-gradient(168deg, var(--bg-deep) 0%, var(--bg-mid) 50%, oklch(0.18 0.05 245) 100%);
+      line-height: 1.6;
+      color-scheme: dark;
+      background:
+        radial-gradient(ellipse 900px 480px at 50% -20%, oklch(0.42 0.12 195 / 0.22), transparent 55%),
+        radial-gradient(1000px 520px at 8% -8%, oklch(0.38 0.12 240 / 0.38), transparent),
+        radial-gradient(800px 480px at 100% 18%, oklch(0.4 0.1 200 / 0.2), transparent),
+        linear-gradient(172deg, var(--bg-deep) 0%, var(--bg-mid) 48%, oklch(0.16 0.048 248) 100%);
     }
 
     .noise {
@@ -73,20 +92,80 @@
       z-index: 1;
       max-width: 1180px;
       margin: 0 auto;
-      padding: 1.5rem 1.25rem 3rem;
+      padding: clamp(1.25rem, 4vw, 2rem) clamp(1rem, 3vw, 1.5rem) clamp(2.5rem, 6vw, 3.5rem);
     }
 
-    /* Header — 科技网格 + 地图底纹 */
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+
+    /* 区块标题 — 层级清晰 */
+    .section-head {
+      text-align: center;
+      margin-bottom: var(--space-5);
+      max-width: 36rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-head .eyebrow {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: oklch(0.72 0.1 195);
+      margin: 0 0 var(--space-2);
+      text-shadow: 0 0 24px oklch(0.55 0.12 195 / 0.35);
+    }
+
+    .section-head h2 {
+      margin: 0 0 var(--space-2);
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-weight: 700;
+      color: oklch(0.97 0.02 95);
+      letter-spacing: 0.02em;
+      line-height: 1.35;
+      text-shadow: 0 2px 20px oklch(0 0 0 / 0.35);
+    }
+
+    .section-head .section-desc {
+      margin: 0;
+      font-size: 0.88rem;
+      color: oklch(0.78 0.04 95 / 0.88);
+      line-height: 1.55;
+    }
+
+    .section-head--light h2 {
+      color: oklch(0.26 0.04 250);
+      text-shadow: none;
+    }
+
+    .section-head--light .eyebrow {
+      color: oklch(0.48 0.08 250);
+      text-shadow: none;
+    }
+
+    .section-head--light .section-desc {
+      color: var(--text-muted);
+    }
+
+    /* Header — 科技网格 + 玻璃质感 */
     .header {
       text-align: center;
-      padding: 2.5rem 1.5rem 2.25rem;
-      margin-bottom: 1.75rem;
-      border-radius: calc(var(--radius) + 4px);
+      padding: clamp(2rem, 5vw, 2.75rem) clamp(1.25rem, 4vw, 2rem) clamp(2rem, 4vw, 2.5rem);
+      margin-bottom: var(--space-5);
+      border-radius: var(--radius-lg);
       position: relative;
       overflow: hidden;
-      border: 1px solid oklch(1 0 0 / 0.14);
-      box-shadow: var(--shadow), 0 0 60px oklch(0.55 0.15 195 / 0.12);
-      animation: rise 0.7s ease-out both;
+      border: 1px solid oklch(1 0 0 / 0.16);
+      background: linear-gradient(165deg, oklch(0.24 0.06 245 / 0.55), oklch(0.14 0.05 252 / 0.72));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow-md), 0 0 0 1px oklch(1 0 0 / 0.05) inset, 0 0 80px oklch(0.5 0.14 200 / 0.1);
+      animation: rise 0.65s ease-out both;
     }
 
     .header-bg {
@@ -171,39 +250,48 @@
     }
 
     .header h1 {
-      margin: 0 0 0.75rem;
+      margin: 0 auto 0.85rem;
+      max-width: 22em;
       font-family: var(--font-display);
-      font-size: clamp(1.2rem, 3.8vw, 2rem);
+      font-size: clamp(1.25rem, 3.6vw, 2.05rem);
       font-weight: 700;
-      line-height: 1.4;
+      line-height: 1.42;
       color: oklch(0.99 0.01 95);
       letter-spacing: 0.03em;
       text-shadow: 0 2px 24px oklch(0 0 0 / 0.4), 0 0 40px oklch(0.65 0.15 195 / 0.35);
     }
 
     .header .sub {
-      margin: 0;
-      font-size: clamp(0.9rem, 2vw, 1.05rem);
+      margin: 0 auto;
+      max-width: 36rem;
+      font-size: clamp(0.9rem, 2vw, 1.06rem);
       font-weight: 500;
-      color: oklch(0.9 0.03 95 / 0.95);
+      line-height: 1.55;
+      color: oklch(0.88 0.03 95 / 0.96);
     }
 
     .badge-row {
-      margin-top: 1.2rem;
+      margin-top: var(--space-5);
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: var(--space-2);
       justify-content: center;
     }
 
     .badge {
       font-size: 0.72rem;
       font-weight: 600;
-      padding: 0.35rem 0.75rem;
+      padding: 0.4rem 0.85rem;
       border-radius: 999px;
-      background: oklch(1 0 0 / 0.1);
-      color: oklch(0.95 0.02 95);
-      border: 1px solid oklch(1 0 0 / 0.18);
+      background: linear-gradient(135deg, oklch(1 0 0 / 0.14), oklch(1 0 0 / 0.06));
+      color: oklch(0.96 0.02 95);
+      border: 1px solid oklch(1 0 0 / 0.22);
+      box-shadow: 0 1px 0 oklch(1 0 0 / 0.08) inset;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .badge:hover {
+      border-color: oklch(0.75 0.1 195 / 0.45);
     }
 
     @keyframes scan-sweep {
@@ -224,21 +312,35 @@
 
     /* Video — HUD 外框 */
     .video-section {
-      animation: rise 0.75s ease-out 0.08s both;
+      animation: rise 0.7s ease-out 0.06s both;
       max-width: 920px;
-      margin: 0 auto 2rem;
+      margin: 0 auto;
+    }
+
+    .video-section .section-head {
+      margin-bottom: var(--space-5);
     }
 
     .hud-chassis {
       position: relative;
-      padding: 1rem 1rem 1.15rem;
-      border-radius: calc(var(--radius) + 6px);
-      background: linear-gradient(145deg, oklch(0.2 0.04 250), oklch(0.14 0.05 255));
-      border: 1px solid oklch(0.65 0.1 195 / 0.35);
+      padding: var(--space-5) var(--space-4) var(--space-5);
+      border-radius: calc(var(--radius) + 8px);
+      background: linear-gradient(150deg, oklch(0.22 0.045 252), oklch(0.12 0.05 258));
+      border: 1px solid oklch(0.62 0.1 195 / 0.4);
       box-shadow:
-        inset 0 1px 0 oklch(1 0 0 / 0.06),
-        0 12px 40px oklch(0 0 0 / 0.35),
-        0 0 0 1px oklch(0.5 0.08 200 / 0.2);
+        inset 0 1px 0 oklch(1 0 0 / 0.08),
+        0 16px 48px oklch(0 0 0 / 0.38),
+        0 0 0 1px oklch(0.45 0.08 200 / 0.25);
+      transition: box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+
+    .hud-chassis:hover {
+      border-color: oklch(0.58 0.12 195 / 0.55);
+      box-shadow:
+        inset 0 1px 0 oklch(1 0 0 / 0.1),
+        0 22px 56px oklch(0 0 0 / 0.42),
+        0 0 0 1px oklch(0.5 0.1 200 / 0.3),
+        0 0 60px oklch(0.5 0.14 195 / 0.12);
     }
 
     .hud-chassis::before,
@@ -270,13 +372,14 @@
 
     .hud-label {
       position: absolute;
-      top: 0.55rem;
+      top: 0.65rem;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.65rem;
+      font-family: var(--font-ui);
+      font-size: 0.62rem;
       font-weight: 700;
-      letter-spacing: 0.28em;
-      color: oklch(0.75 0.1 195);
+      letter-spacing: 0.32em;
+      color: oklch(0.78 0.11 195);
       text-transform: uppercase;
       z-index: 3;
       pointer-events: none;
@@ -339,22 +442,13 @@
 
     /* Knowledge cards */
     .knowledge-section {
-      margin-bottom: 2rem;
-    }
-
-    .knowledge-section h2 {
-      margin: 0 0 1.1rem;
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: oklch(0.95 0.03 95);
-      text-align: center;
-      text-shadow: 0 1px 12px oklch(0 0 0 / 0.25);
+      margin-bottom: 0;
     }
 
     .knowledge-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1.1rem;
+      gap: var(--space-5);
     }
 
     @media (min-width: 720px) {
@@ -381,62 +475,89 @@
     }
 
     .k-card {
-      background: var(--surface);
+      position: relative;
+      background: linear-gradient(180deg, var(--surface-elevated) 0%, var(--surface) 100%);
       color: var(--text);
-      border-radius: var(--radius);
-      padding: 1.2rem 1.15rem 1.25rem;
-      border: 1px solid oklch(0.9 0.015 250);
-      box-shadow: var(--shadow);
-      animation: rise 0.8s ease-out both;
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-5) var(--space-5);
+      border: 1px solid oklch(0.91 0.012 248);
+      box-shadow: var(--shadow-card);
+      animation: rise 0.75s ease-out both;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
 
-    .k-card:nth-child(1) { animation-delay: 0.1s; }
-    .k-card:nth-child(2) { animation-delay: 0.14s; }
-    .k-card:nth-child(3) { animation-delay: 0.18s; }
+    .k-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      box-shadow: 0 1px 0 oklch(1 0 0 / 0.65) inset;
+      opacity: 0.9;
+    }
+
+    .k-card:hover {
+      transform: translateY(-3px);
+      border-color: oklch(0.82 0.04 220);
+      box-shadow: var(--shadow-card-hover);
+    }
+
+    .k-card:nth-child(1) { animation-delay: 0.08s; }
+    .k-card:nth-child(2) { animation-delay: 0.12s; }
+    .k-card:nth-child(3) { animation-delay: 0.16s; }
 
     .k-card h3 {
-      margin: 0 0 0.75rem;
-      font-size: 1rem;
+      margin: 0 0 var(--space-3);
+      font-size: 1.02rem;
       font-weight: 700;
-      color: oklch(0.26 0.05 250);
+      color: oklch(0.24 0.045 250);
       display: flex;
       align-items: flex-start;
-      gap: 0.5rem;
-      line-height: 1.35;
+      gap: var(--space-2);
+      line-height: 1.38;
+      letter-spacing: 0.01em;
     }
 
     .k-card h3 .tag {
       flex-shrink: 0;
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 0.2rem 0.45rem;
-      border-radius: 6px;
-      background: linear-gradient(135deg, oklch(0.55 0.14 250), oklch(0.48 0.12 260));
-      color: white;
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.28rem 0.5rem;
+      border-radius: 8px;
+      background: linear-gradient(145deg, oklch(0.52 0.14 250), oklch(0.42 0.12 265));
+      color: oklch(0.99 0 0);
+      box-shadow: 0 2px 8px oklch(0.35 0.1 260 / 0.35);
+      letter-spacing: 0.06em;
     }
 
     .k-card p {
       margin: 0;
-      font-size: 0.88rem;
-      line-height: 1.7;
+      font-size: 0.9rem;
+      line-height: 1.72;
       color: var(--text-muted);
     }
 
+    .k-card p.k-card-lead {
+      margin-top: var(--space-3);
+    }
+
     .k-card .math-block {
-      margin-top: 0.65rem;
-      padding: 0.6rem 0.7rem;
-      border-radius: 0.5rem;
-      background: oklch(0.97 0.015 250);
-      border: 1px solid oklch(0.9 0.02 250);
+      margin-top: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-radius: 0.65rem;
+      background: oklch(0.97 0.012 250);
+      border: 1px solid oklch(0.9 0.018 250);
       overflow-x: auto;
     }
 
     .k-visual {
-      margin-top: 0.85rem;
-      border-radius: 0.65rem;
-      background: oklch(0.96 0.02 250);
-      border: 1px solid oklch(0.9 0.02 250);
-      padding: 0.75rem;
+      margin-top: var(--space-4);
+      border-radius: 0.75rem;
+      background: linear-gradient(180deg, oklch(0.97 0.015 250), oklch(0.95 0.02 250));
+      border: 1px solid oklch(0.9 0.02 248);
+      padding: var(--space-4);
+      box-shadow: 0 1px 0 oklch(1 0 0 / 0.8) inset;
     }
 
     /* 手机地图线段比例尺示意 */
@@ -494,6 +615,11 @@
       border-radius: 2px;
     }
 
+    .scale-inner {
+      position: relative;
+      padding-top: 8px;
+    }
+
     .scale-wrap {
       position: relative;
       min-width: 140px;
@@ -532,6 +658,19 @@
       box-shadow: 0 0 12px oklch(0.55 0.18 150 / 0.45);
     }
 
+    .traffic-legend .traffic-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+
+    .traffic-legend .traffic-label--muted-red {
+      color: oklch(0.42 0.06 28);
+    }
+
+    .traffic-legend .traffic-label--muted-green {
+      color: oklch(0.4 0.06 155);
+    }
+
     /* 反比例天平 */
     .balance-demo {
       display: flex;
@@ -556,20 +695,42 @@
 
     /* Interactive */
     .interactive {
-      margin-top: 0.5rem;
-      padding: 1.5rem 1.35rem;
-      border-radius: var(--radius);
-      background: var(--surface-2);
-      border: 1px solid oklch(0.9 0.015 250);
-      box-shadow: var(--shadow);
-      animation: rise 0.85s ease-out 0.2s both;
+      margin-top: 0;
+      padding: var(--space-6) var(--space-5);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(165deg, var(--surface-2) 0%, oklch(0.99 0.006 245) 100%);
+      border: 1px solid oklch(0.9 0.018 248);
+      box-shadow: var(--shadow-card);
+      animation: rise 0.75s ease-out 0.18s both;
+      position: relative;
+      overflow: hidden;
     }
 
-    .interactive h2 {
-      margin: 0 0 0.75rem;
-      font-size: 1.1rem;
+    .interactive::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 4px 0 0 4px;
+      background: linear-gradient(180deg, oklch(0.55 0.14 250), oklch(0.5 0.14 195));
+      opacity: 0.85;
+    }
+
+    .interactive .section-head {
+      text-align: left;
+      margin-left: 0;
+      margin-bottom: var(--space-4);
+      max-width: 42rem;
+    }
+
+    .interactive .section-head h2 {
+      margin: 0 0 var(--space-2);
+      font-size: 1.2rem;
       font-weight: 700;
-      color: oklch(0.28 0.04 250);
+      color: oklch(0.26 0.04 250);
+      font-family: var(--font-display);
     }
 
     .interactive .prompt {
@@ -638,6 +799,15 @@
       transform: translateY(0) scale(0.98);
     }
 
+    .btn:focus-visible {
+      outline: 2px solid oklch(0.65 0.12 220);
+      outline-offset: 3px;
+    }
+
+    .btn-ghost:focus-visible {
+      outline-color: oklch(0.5 0.08 250);
+    }
+
     .btn-ghost {
       background: oklch(0.96 0.01 250);
       color: var(--text);
@@ -682,10 +852,16 @@
     }
 
     .footer-note {
-      margin-top: 2.5rem;
+      margin-top: var(--space-8);
+      padding-top: var(--space-5);
+      border-top: 1px solid oklch(1 0 0 / 0.08);
       text-align: center;
       font-size: 0.78rem;
-      color: oklch(0.7 0.04 95 / 0.75);
+      line-height: 1.6;
+      color: oklch(0.72 0.04 95 / 0.78);
+      max-width: 40rem;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     @keyframes rise {
@@ -709,8 +885,18 @@
       .interactive {
         animation: none;
       }
-      .btn:hover {
+      .btn:hover,
+      .badge:hover {
         transform: none;
+      }
+      .k-card:hover {
+        transform: none;
+      }
+      .hud-chassis:hover {
+        box-shadow:
+          inset 0 1px 0 oklch(1 0 0 / 0.08),
+          0 16px 48px oklch(0 0 0 / 0.38),
+          0 0 0 1px oklch(0.45 0.08 200 / 0.25);
       }
     }
   </style>
@@ -735,8 +921,13 @@
       </div>
     </header>
 
+    <main class="main">
     <section class="video-section" aria-labelledby="video-heading">
-      <h2 id="video-heading" class="visually-hidden">微课视频</h2>
+      <header class="section-head">
+        <p class="eyebrow">核心微课</p>
+        <h2 id="video-heading">核心微课视频</h2>
+        <p class="section-desc">16:9 沉浸观看 · 建议横屏或全屏获得最佳体验</p>
+      </header>
       <div class="hud-chassis">
         <span class="hud-label" aria-hidden="true">NAV · HUD</span>
         <div class="hud-bezel">
@@ -763,7 +954,11 @@
     </section>
 
     <section class="knowledge-section" aria-labelledby="knowledge-heading">
-      <h2 id="knowledge-heading">知识解密</h2>
+      <header class="section-head">
+        <p class="eyebrow">知识板块</p>
+        <h2 id="knowledge-heading">知识解密</h2>
+        <p class="section-desc">从比例尺、导航智能到反比例 —— 三个视角串联数学与科技</p>
+      </header>
       <div class="knowledge-grid">
         <article class="k-card">
           <h3><span class="tag">A</span>地图的数学密码（比例尺）</h3>
@@ -777,7 +972,7 @@
             <div class="scale-phone">
               <div class="phone" aria-hidden="true"></div>
               <div class="scale-wrap">
-                <div style="position:relative;padding-top:8px">
+                <div class="scale-inner">
                   <div class="scale-bar" aria-hidden="true">
                     <span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span><span class="tick"></span>
                     <span class="bar"></span>
@@ -794,7 +989,7 @@
           <p>
             高德、谷歌地图等导航会融合路网、实时车速与历史规律：用图神经网络（GNN）等方法理解道路之间的关联，再结合实时数据判断拥堵（红线）与畅通（绿线），从而估计每段路程的行驶速度。
           </p>
-          <p style="margin-top:0.65rem">
+          <p class="k-card-lead">
             把路程与速度联系起来，就能用下面的关系估算<strong>ETA（预估到达时间）</strong>。
           </p>
           <div class="math-block" aria-label="时间与路程速度">
@@ -803,9 +998,9 @@
           <div class="k-visual">
             <div class="traffic-legend" aria-hidden="true">
               <span class="line red" title="拥堵"></span>
-              <span style="font-size:0.72rem;color:oklch(0.45 0.05 30)">拥堵 · 车速低</span>
+              <span class="traffic-label traffic-label--muted-red">拥堵 · 车速低</span>
               <span class="line green" title="畅通"></span>
-              <span style="font-size:0.72rem;color:oklch(0.42 0.05 160)">畅通 · 车速高</span>
+              <span class="traffic-label traffic-label--muted-green">畅通 · 车速高</span>
             </div>
           </div>
         </article>
@@ -845,7 +1040,11 @@
     </section>
 
     <section class="interactive" aria-labelledby="interactive-title">
-      <h2 id="interactive-title">在线挑战</h2>
+      <header class="section-head section-head--light">
+        <p class="eyebrow">互动拓展</p>
+        <h2 id="interactive-title">在线挑战</h2>
+        <p class="section-desc">结合导航场景思考 AI 如何做决策 —— 观点仅保存在本机</p>
+      </header>
       <p class="prompt">
         如果你是 AI，面对「距离近但拥堵的红线」和「距离远但畅通的绿线」，你会推荐哪一条路？请简要说明你的理由（内容仅保存在本机浏览器中，便于课后回顾）。
       </p>
@@ -861,6 +1060,7 @@
         <div id="thoughts-list"></div>
       </div>
     </section>
+    </main>
 
     <p class="footer-note">本页面为大赛作品展示页 · 数学微课《地图导航如何预知未来？——“比例尺”的 AI 科技之旅》</p>
   </div>
