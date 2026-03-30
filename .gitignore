@@ -1,3 +1,4 @@
-﻿*.mp4
+# 默认忽略 mp4，微课成片放在 assets/ 并显式取消忽略以便推送 GitHub Pages
+*.mp4
+!assets/*.mp4
 .DS_Store
-
